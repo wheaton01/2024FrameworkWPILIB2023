@@ -98,4 +98,25 @@ public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math
     public static final double RLOffset = 302.4;
     public static final double RROffset = 305.2;
   }
+  public static final class subsystemConstants{
+    
+
+
+    public static final double kShooterPIDTolerance = 30;
+
+
+
+  }
+  public static final class Ports{
+    //TODO: GET CORRECT MOTOR IDS
+    public static final int kArmMotorID            = 15;
+    public static final int kIntakeMotorID         = 16;
+    public static final int kTopShooterMotorID     = 17;
+    public static final int kBotShooterMotorID     = 19;
+    public static final int kWinchMotorID          = 19;
+    public static final int kArmEncoderID1         = 0;
+    public static final int kArmEncoderID2         = 1;
+    public static final int kNoteSensorID          = 2;
+  
+  }
 }

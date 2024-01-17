@@ -62,9 +62,15 @@ import swervelib.parser.*;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  intakeSubsystem sIntake  = new intakeSubsystem(Constants.Ports.kIntakeMotorID, Constants.Ports.kNoteSensorID);
-  shooterSubsytem sShooter = new shooterSubsytem(Constants.Ports.kTopShooterMotorID,Constants.Ports.kBotShooterMotorID);
-  armSubsystem    sArm     = new armSubsystem(Constants.Ports.kArmMotorID, Constants.Ports.kWinchMotorID ,Constants.Ports.kArmEncoderID1,Constants.Ports.kArmEncoderID2);
+  intakeSubsystem sIntake  = new intakeSubsystem(Constants.Ports.kIntakeMotorID,
+                                                 Constants.Ports.kNoteSensorID);
+  shooterSubsytem sShooter = new shooterSubsytem(Constants.Ports.kTopShooterMotorID,
+                                                 Constants.Ports.kBotShooterMotorID);
+  armSubsystem    sArm     = new armSubsystem(Constants.Ports.kArmMotorID, 
+                                              Constants.Ports.kWinchMotorID,
+                                              Constants.Ports.kLowerLimitID,
+                                              Constants.Ports.kArmEncoderID1,
+                                              Constants.Ports.kArmEncoderID2);
 
 
   //SwerveDrive swerveDrive= new SwerveParser(new File(Filesystem.getDeployDirectory(),"swerve/neo")).createSwerveDrive(Units.feetToMeters(14.5));
