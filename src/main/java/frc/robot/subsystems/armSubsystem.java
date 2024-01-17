@@ -14,21 +14,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class armSubsystem extends SubsystemBase {
   /** Creates a new armSubsystem. */
-  CANSparkMax armMotor;
-  double setpoint;
-  int motorID,encoderPort1,encoderPort2;
+  CANSparkMax armMotor,winchMotor;
+  public double setpoint,currentPose;
+  int motorID,encoderPort1,encoderPort2,winchMotorID;
   Encoder angEncoder;
   SparkMaxPIDController mArmPID;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
+  
 
 
-  public armSubsystem(int motorID, int encoderPort1, int encoderPort2) {
+  public armSubsystem(int motorID,int winchMotorID, int encoderPort1, int encoderPort2) {
     this.motorID = motorID;
     this.encoderPort1 = encoderPort1;
     this.encoderPort2 = encoderPort2;
 
     angEncoder = new Encoder(encoderPort1,encoderPort2);
     armMotor = new CANSparkMax(motorID, MotorType.kBrushless);
+    winchMotor = new CANSparkMax(winchMotorID, MotorType.kBrushless);
 
     mArmPID = armMotor.getPIDController();
     angEncoder.setDistancePerPulse(360.0/2048.0);//will return 360 units for every 2048 pulses
@@ -51,10 +53,25 @@ public class armSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    //just polls the encoder angle maybe for command stuff idk yet!
+    currentPose = angEncoder.getDistance();
     // This method will be called once per scheduler run
   }
+  //sets the arm to a certain pose
   public void setPose(double Position){
     mArmPID.setReference(Position, ControlType.kPosition);
-    System.out.println("arm Setpoint is : "+Position);
+    System.out.println("ARM SETPOINT IS NOW : "+Position);
+  }
+  //sets winch speed, plan on using operator stick values for this
+  public void setWinch(double setpoint){
+    winchMotor.set(setpoint);
+  }
+  //gets current angle 
+  public double getAngle(){
+    return angEncoder.getDistance();
+  }
+  //resets encoder
+  public void resetEncoder(){
+    angEncoder.reset();
   }
 }

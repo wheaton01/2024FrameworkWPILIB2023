@@ -64,7 +64,7 @@ public class RobotContainer {
 
   intakeSubsystem sIntake  = new intakeSubsystem(Constants.Ports.kIntakeMotorID, Constants.Ports.kNoteSensorID);
   shooterSubsytem sShooter = new shooterSubsytem(Constants.Ports.kTopShooterMotorID,Constants.Ports.kBotShooterMotorID);
-  armSubsystem    sArm     = new armSubsystem(Constants.Ports.kArmMotorID, Constants.Ports.kArmEncoderID1,Constants.Ports.kArmEncoderID2);
+  armSubsystem    sArm     = new armSubsystem(Constants.Ports.kArmMotorID, Constants.Ports.kWinchMotorID ,Constants.Ports.kArmEncoderID1,Constants.Ports.kArmEncoderID2);
 
 
   //SwerveDrive swerveDrive= new SwerveParser(new File(Filesystem.getDeployDirectory(),"swerve/neo")).createSwerveDrive(Units.feetToMeters(14.5));
@@ -135,23 +135,23 @@ AbsoluteFieldDrive teleopField = new AbsoluteFieldDrive(drivebase,
   private void configureBindings() {
 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // new Trigger(m_exampleSubsystem::exampleCondition)
+    //     .onTrue(new ExampleCommand(m_exampleSubsystem)); might be good to use for sequential command control
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
 
     m_driverController.leftBumper().whileTrue(new aprilTagSwerve(drivebase, 
-    () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-    OperatorConstants.LEFT_Y_DEADBAND),
-  () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-      OperatorConstants.LEFT_X_DEADBAND),
-  () -> MathUtil.applyDeadband(driverXbox.getRightX(),
-      OperatorConstants.RIGHT_X_DEADBAND),
-      () -> driverXbox.getRightBumper()));
+                                  () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                   OperatorConstants.LEFT_Y_DEADBAND),
+                                  () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                   OperatorConstants.LEFT_X_DEADBAND),
+                                  () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                   OperatorConstants.RIGHT_X_DEADBAND),
+                                  () -> driverXbox.getRightBumper()));
     m_driverController.a().onTrue(new zeroGyroCommand(drivebase));
     
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
