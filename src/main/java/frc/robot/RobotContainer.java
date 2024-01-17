@@ -16,6 +16,9 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.commands.swervedrive.drivebase.zeroGyroCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.armSubsystem;
+import frc.robot.subsystems.intakeSubsystem;
+import frc.robot.subsystems.shooterSubsytem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import swervelib.SwerveDrive;
 
@@ -59,66 +62,61 @@ import swervelib.parser.*;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
+  intakeSubsystem sIntake  = new intakeSubsystem(Constants.Ports.kIntakeMotorID, Constants.Ports.kNoteSensorID);
+  shooterSubsytem sShooter = new shooterSubsytem(Constants.Ports.kTopShooterMotorID,Constants.Ports.kBotShooterMotorID);
+  armSubsystem    sArm     = new armSubsystem(Constants.Ports.kArmMotorID, Constants.Ports.kArmEncoderID1,Constants.Ports.kArmEncoderID2);
+
+
   //SwerveDrive swerveDrive= new SwerveParser(new File(Filesystem.getDeployDirectory(),"swerve/neo")).createSwerveDrive(Units.feetToMeters(14.5));
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve/neo"));
 
 
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(0);
-
+  private final CommandXboxController m_driverController = new CommandXboxController(0);
   XboxController driverXbox = new XboxController(OperatorConstants.kDriverPort);
 
   TeleopDrive teleopDrive = new TeleopDrive(drivebase, 
-  () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-  OperatorConstants.LEFT_Y_DEADBAND),
-() -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-    OperatorConstants.LEFT_X_DEADBAND),
-() -> MathUtil.applyDeadband(driverXbox.getRightX(),
-    OperatorConstants.RIGHT_X_DEADBAND),
-    () -> driverXbox.getRightBumper());
-
-
+                                () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                  OperatorConstants.LEFT_Y_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                  OperatorConstants.LEFT_X_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                  OperatorConstants.RIGHT_X_DEADBAND),
+                                () -> driverXbox.getRightBumper());
 
     AbsoluteDrive absDrive = new AbsoluteDrive(drivebase,  
-  () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-      OperatorConstants.LEFT_Y_DEADBAND),
-  () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-      OperatorConstants.LEFT_X_DEADBAND),
-  () -> MathUtil.applyDeadband(driverXbox.getRightX(),
-     OperatorConstants.RIGHT_X_DEADBAND),  
-  () -> MathUtil.applyDeadband(driverXbox.getRightY(),
-      OperatorConstants.RIGHT_Y_DEADBAND));
-
-
+                                () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                    OperatorConstants.LEFT_Y_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                    OperatorConstants.LEFT_X_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                   OperatorConstants.RIGHT_X_DEADBAND),  
+                                () -> MathUtil.applyDeadband(driverXbox.getRightY(),
+                                    OperatorConstants.RIGHT_Y_DEADBAND));
 
 AbsoluteFieldDrive teleopField = new AbsoluteFieldDrive(drivebase,   
-() -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-OperatorConstants.LEFT_Y_DEADBAND),
-() -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-  OperatorConstants.LEFT_X_DEADBAND),
-() -> MathUtil.applyDeadband(driverXbox.getRightX(),
-  OperatorConstants.RIGHT_X_DEADBAND) );
-
-
-
+                                () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                  OperatorConstants.LEFT_Y_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                  OperatorConstants.LEFT_X_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                  OperatorConstants.RIGHT_X_DEADBAND) );
 
   //LIMELIGHT DRIVE
   aprilTagSwerve limelightSwerve = new aprilTagSwerve(drivebase, 
-  () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-  OperatorConstants.LEFT_Y_DEADBAND),
-  () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-    OperatorConstants.LEFT_X_DEADBAND),
-  () -> MathUtil.applyDeadband(driverXbox.getRightX(),
-    OperatorConstants.RIGHT_X_DEADBAND),
-    () -> driverXbox.getRightBumper());
+                                () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                  OperatorConstants.LEFT_Y_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                  OperatorConstants.LEFT_X_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                  OperatorConstants.RIGHT_X_DEADBAND),
+                                () -> driverXbox.getRightBumper());
 
 
 
 
+                            
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
