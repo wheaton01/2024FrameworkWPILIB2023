@@ -4,24 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.Auton;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.aprilTagSwerve;
-import frc.robot.commands.testSequence;
-import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
-import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
-import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
-import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
-import frc.robot.commands.swervedrive.drivebase.zeroGyroCommand;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.armSubsystem;
-import frc.robot.subsystems.intakeSubsystem;
-import frc.robot.subsystems.shooterSubsytem;
-import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import swervelib.SwerveDrive;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -40,19 +22,21 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import swervelib.parser.*;
+import frc.robot.Constants.Auton;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.aprilTagSwerve;
+import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
+import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
+import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
+import frc.robot.commands.swervedrive.drivebase.zeroGyroCommand;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -61,16 +45,16 @@ import swervelib.parser.*;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
-  intakeSubsystem sIntake  = new intakeSubsystem(Constants.Ports.kIntakeMotorID,
-                                                 Constants.Ports.kNoteSensorID);
-  shooterSubsytem sShooter = new shooterSubsytem(Constants.Ports.kTopShooterMotorID,
-                                                 Constants.Ports.kBotShooterMotorID);
-  armSubsystem    sArm     = new armSubsystem(Constants.Ports.kArmMotorID, 
-                                              Constants.Ports.kWinchMotorID,
-                                              Constants.Ports.kLowerLimitID,
-                                              Constants.Ports.kArmEncoderID1,
-                                              Constants.Ports.kArmEncoderID2);
+// Commented out due to CAN IDS not existing
+  // intakeSubsystem sIntake  = new intakeSubsystem(Constants.Ports.kIntakeMotorID,
+  //                                                Constants.Ports.kNoteSensorID);
+  // shooterSubsytem sShooter = new shooterSubsytem(Constants.Ports.kTopShooterMotorID,
+  //                                                Constants.Ports.kBotShooterMotorID);
+  // armSubsystem    sArm     = new armSubsystem(Constants.Ports.kArmMotorID, 
+  //                                             Constants.Ports.kWinchMotorID,
+  //                                             Constants.Ports.kLowerLimitID,
+  //                                             Constants.Ports.kArmEncoderID1,
+  //                                             Constants.Ports.kArmEncoderID2);
 
 
   //SwerveDrive swerveDrive= new SwerveParser(new File(Filesystem.getDeployDirectory(),"swerve/neo")).createSwerveDrive(Units.feetToMeters(14.5));
@@ -83,57 +67,57 @@ public class RobotContainer {
   XboxController driverXbox = new XboxController(OperatorConstants.kDriverPort);
 
   TeleopDrive teleopDrive = new TeleopDrive(drivebase, 
-                                () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(1),
                                   OperatorConstants.LEFT_Y_DEADBAND),
-                                () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(0),
                                   OperatorConstants.LEFT_X_DEADBAND),
-                                () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(4),
                                   OperatorConstants.RIGHT_X_DEADBAND),
                                 () -> driverXbox.getRightBumper());
 
     AbsoluteDrive absDrive = new AbsoluteDrive(drivebase,  
-                                () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(1),
                                     OperatorConstants.LEFT_Y_DEADBAND),
-                                () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(0),
                                     OperatorConstants.LEFT_X_DEADBAND),
-                                () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(4),
                                    OperatorConstants.RIGHT_X_DEADBAND),  
-                                () -> MathUtil.applyDeadband(driverXbox.getRightY(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(5),
                                     OperatorConstants.RIGHT_Y_DEADBAND));
 
 AbsoluteFieldDrive teleopField = new AbsoluteFieldDrive(drivebase,   
-                                () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(1),
                                   OperatorConstants.LEFT_Y_DEADBAND),
-                                () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(0),
                                   OperatorConstants.LEFT_X_DEADBAND),
-                                () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(4),
                                   OperatorConstants.RIGHT_X_DEADBAND) );
 
   //LIMELIGHT DRIVE
   aprilTagSwerve limelightSwerve = new aprilTagSwerve(drivebase, 
-                                () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(1),
                                   OperatorConstants.LEFT_Y_DEADBAND),
-                                () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(0),
                                   OperatorConstants.LEFT_X_DEADBAND),
-                                () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(4),
                                   OperatorConstants.RIGHT_X_DEADBAND),
                                 () -> driverXbox.getRightBumper());
 
 
 
 
-private final SendableChooser<Command> autoChooser;
+//private final SendableChooser<Command> autoChooser;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     configureBindings();
         // Build an auto chooser. This will use Commands.none() as the default option.
-        autoChooser = AutoBuilder.buildAutoChooser();
+        // autoChooser = AutoBuilder.buildAutoChooser();
 
-        // Another option that allows you to specify the default auto by its name
-        // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+        // // Another option that allows you to specify the default auto by its name
+        // // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
     
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+        // SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -172,12 +156,12 @@ private final SendableChooser<Command> autoChooser;
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand(){
+  public Command getAutonomousCommandTest(){
     return new PathPlannerAuto("Example Auto");
 }
 
 //NOT SURE IF THIS CODE BELOW WILL WORK NEEDS TESTING
-  public Command getAutonomousCommandrev1() {
+  public Command getAutonomousCommand() {
     Trajectory PPtraj= loadPPtraj("generatedJSON");
 
 
@@ -242,7 +226,6 @@ private final SendableChooser<Command> autoChooser;
   
   return PPtrajectory;
 }
-
 
 
 }

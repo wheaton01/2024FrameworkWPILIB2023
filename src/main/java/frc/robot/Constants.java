@@ -103,6 +103,11 @@ public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math
 
 
     public static final double kShooterPIDTolerance = 30;
+    public static final double kWaitForShoot = 0.5;
+    public static final double kWaitForSpool = .050;
+    public static final double kArmShootingPos = 30;
+    public static final double kShootingSpeed = .8;
+    public static final double kIntakeFeedSpeed = .5;
 
 
 
@@ -117,6 +122,7 @@ public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math
     public static final int kArmEncoderID1         = 0;
     public static final int kArmEncoderID2         = 1;
     public static final int kNoteSensorID          = 2;
+    public static final int kLowerLimitID          = 3;
   
   }
 }
