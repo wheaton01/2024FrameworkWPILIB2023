@@ -13,7 +13,7 @@ public class setArm extends CommandBase {
   double setpoint,currentPose;
   boolean useLimitSwitch,blimitSwitch;
 
-  public setArm(armSubsystem sArm, double setpoint, boolean useLimitSwitch) {
+  public setArm(armSubsystem sArm, double setpoint, boolean useLimitSwitch, boolean useLimelight) {
     this.sArm = sArm;
     this.setpoint = setpoint;
     this.useLimitSwitch = useLimitSwitch;

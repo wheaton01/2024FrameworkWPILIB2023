@@ -5,16 +5,28 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.shooterSubsytem;
 
-public class setIntake extends CommandBase {
-  /** Creates a new setIntake. */
-  public setIntake() {
+public class setShooter extends CommandBase {
+  /** Creates a new setShooter. */
+  shooterSubsytem sShooter;
+  double setpoint;
+  boolean turnOff;
+  public setShooter(shooterSubsytem sShooter, double setpoint, boolean turnOff, boolean useLimelight) {
+    this.sShooter = sShooter;
+    this.setpoint = setpoint;
+    this.turnOff  = turnOff;
+
+
+    addRequirements(sShooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    sShooter.setSpeed(setpoint);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -22,7 +34,11 @@ public class setIntake extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    if (turnOff){
+      sShooter.setSpeed(0);
+    }
+  }
 
   // Returns true when the command should end.
   @Override
