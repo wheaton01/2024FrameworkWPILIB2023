@@ -16,6 +16,9 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.commands.swervedrive.drivebase.zeroGyroCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.armSubsystem;
+import frc.robot.subsystems.intakeSubsystem;
+import frc.robot.subsystems.shooterSubsytem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import swervelib.SwerveDrive;
 
@@ -59,70 +62,75 @@ import swervelib.parser.*;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
+  intakeSubsystem sIntake  = new intakeSubsystem(Constants.Ports.kIntakeMotorID,
+                                                 Constants.Ports.kNoteSensorID);
+  shooterSubsytem sShooter = new shooterSubsytem(Constants.Ports.kTopShooterMotorID,
+                                                 Constants.Ports.kBotShooterMotorID);
+  armSubsystem    sArm     = new armSubsystem(Constants.Ports.kArmMotorID, 
+                                              Constants.Ports.kWinchMotorID,
+                                              Constants.Ports.kLowerLimitID,
+                                              Constants.Ports.kArmEncoderID1,
+                                              Constants.Ports.kArmEncoderID2);
+
+
   //SwerveDrive swerveDrive= new SwerveParser(new File(Filesystem.getDeployDirectory(),"swerve/neo")).createSwerveDrive(Units.feetToMeters(14.5));
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                          "swerve/neo"));
 
 
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(0);
-
+  private final CommandXboxController m_driverController = new CommandXboxController(0);
   XboxController driverXbox = new XboxController(OperatorConstants.kDriverPort);
 
   TeleopDrive teleopDrive = new TeleopDrive(drivebase, 
-  () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-  OperatorConstants.LEFT_Y_DEADBAND),
-() -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-    OperatorConstants.LEFT_X_DEADBAND),
-() -> MathUtil.applyDeadband(driverXbox.getRightX(),
-    OperatorConstants.RIGHT_X_DEADBAND),
-    () -> driverXbox.getRightBumper());
+                                () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                  OperatorConstants.LEFT_Y_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                  OperatorConstants.LEFT_X_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                  OperatorConstants.RIGHT_X_DEADBAND),
+                                () -> driverXbox.getRightBumper());
 
-
-
-    AbsoluteDrive absDrive = new AbsoluteDrive(drivebase,  
-  () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-      OperatorConstants.LEFT_Y_DEADBAND),
-  () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-      OperatorConstants.LEFT_X_DEADBAND),
-  () -> MathUtil.applyDeadband(driverXbox.getRightX(),
-     OperatorConstants.RIGHT_X_DEADBAND),  
-  () -> MathUtil.applyDeadband(driverXbox.getRightY(),
-      OperatorConstants.RIGHT_Y_DEADBAND));
-
-
-
-AbsoluteFieldDrive teleopField = new AbsoluteFieldDrive(drivebase,   
-() -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-OperatorConstants.LEFT_Y_DEADBAND),
-() -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-  OperatorConstants.LEFT_X_DEADBAND),
-() -> MathUtil.applyDeadband(driverXbox.getRightX(),
-  OperatorConstants.RIGHT_X_DEADBAND) );
-
-
-
-
-  //LIMELIGHT DRIVE
+  AbsoluteDrive absDrive = new AbsoluteDrive(drivebase,  
+                                () -> -MathUtil.applyDeadband(driverXbox.getRawAxis(1), 0.02),
+                                () -> -MathUtil.applyDeadband(driverXbox.getRawAxis(0),0.02),
+                                () -> -MathUtil.applyDeadband(driverXbox.getRawAxis(4), 0.02),  
+                                () -> -MathUtil.applyDeadband(driverXbox.getRawAxis(5), 0.02));
+                            
+                            
+  AbsoluteFieldDrive teleopField = new AbsoluteFieldDrive(drivebase,   
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(0),
+                                OperatorConstants.LEFT_Y_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(1),
+                                OperatorConstants.LEFT_X_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(4),
+                                OperatorConstants.RIGHT_X_DEADBAND) );
+                            
+                              //LIMELIGHT DRIVE
   aprilTagSwerve limelightSwerve = new aprilTagSwerve(drivebase, 
-  () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-  OperatorConstants.LEFT_Y_DEADBAND),
-  () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-    OperatorConstants.LEFT_X_DEADBAND),
-  () -> MathUtil.applyDeadband(driverXbox.getRightX(),
-    OperatorConstants.RIGHT_X_DEADBAND),
-    () -> driverXbox.getRightBumper());
+                                () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                OperatorConstants.LEFT_Y_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                OperatorConstants.LEFT_X_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                OperatorConstants.RIGHT_X_DEADBAND),
+                                () -> driverXbox.getRightBumper());
 
 
 
 
+private final SendableChooser<Command> autoChooser;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     configureBindings();
+        // Build an auto chooser. This will use Commands.none() as the default option.
+        autoChooser = AutoBuilder.buildAutoChooser();
+
+        // Another option that allows you to specify the default auto by its name
+        // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+    
+        SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -137,23 +145,25 @@ OperatorConstants.LEFT_Y_DEADBAND),
   private void configureBindings() {
 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // new Trigger(m_exampleSubsystem::exampleCondition)
+    //     .onTrue(new ExampleCommand(m_exampleSubsystem)); might be good to use for sequential command control
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
 
     m_driverController.leftBumper().whileTrue(new aprilTagSwerve(drivebase, 
-    () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-    OperatorConstants.LEFT_Y_DEADBAND),
-  () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-      OperatorConstants.LEFT_X_DEADBAND),
-  () -> MathUtil.applyDeadband(driverXbox.getRightX(),
-      OperatorConstants.RIGHT_X_DEADBAND),
-      () -> driverXbox.getRightBumper()));
+                                  () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+                                   OperatorConstants.LEFT_Y_DEADBAND),
+                                  () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+                                   OperatorConstants.LEFT_X_DEADBAND),
+                                  () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                   OperatorConstants.RIGHT_X_DEADBAND),
+                                  () -> driverXbox.getRightBumper()));
+
+                                  
     m_driverController.a().onTrue(new zeroGyroCommand(drivebase));
     
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
@@ -161,8 +171,12 @@ OperatorConstants.LEFT_Y_DEADBAND),
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    Trajectory PPtraj= loadPPtraj("generatedJSON");
+  public Command getAutonomousCommand(){
+    return new PathPlannerAuto("Example Auto");
+}
+
+//NOT SURE IF THIS CODE BELOW WILL WORK NEEDS TESTING
+  public Command getAutonomousCommandrev1() {
 
 
     // 1. Create trajectory settings
@@ -174,13 +188,7 @@ OperatorConstants.LEFT_Y_DEADBAND),
     
 
     // 2. Generate trajectory
-    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-            new Pose2d(0, 0, new Rotation2d(0)),
-            List.of(
-                    new Translation2d(1, 0),
-                    new Translation2d(1, -1)),
-            new Pose2d(2, -1, Rotation2d.fromDegrees(180)),
-            trajectoryConfig);
+    Trajectory PPtraj= loadPPtraj("generatedJSON");
 
     // 3. Define PID controllers for tracking trajectory
     PIDController xController = new PIDController(Auton.kPXController, 0, 0);
@@ -191,7 +199,7 @@ OperatorConstants.LEFT_Y_DEADBAND),
 
     // 4. Construct command to follow trajectory
     SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-            trajectory,
+            PPtraj,
             drivebase::getPose,
             Constants.kDriveKinematics,
             xController,
@@ -202,7 +210,7 @@ OperatorConstants.LEFT_Y_DEADBAND),
 
     // 5. Add some init and wrap-up, and return everything
     return new SequentialCommandGroup(
-            new InstantCommand(() -> drivebase.resetOdometry(trajectory.getInitialPose())),
+            new InstantCommand(() -> drivebase.resetOdometry(PPtraj.getInitialPose())),
             swerveControllerCommand,
             new InstantCommand(() -> drivebase.stopModules()));
 }
