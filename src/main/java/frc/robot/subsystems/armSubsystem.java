@@ -29,9 +29,6 @@ public class armSubsystem extends SubsystemBase {
   CANSparkMax armMotor,winchMotor;
   DigitalInput dLowerLimit;
 
-  
-
-
   public armSubsystem(int motorID,int winchMotorID,int lowerLimitPort, int encoderPort1, int encoderPort2) {
     this.motorID = motorID;
     this.encoderPort1 = encoderPort1;

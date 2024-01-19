@@ -39,7 +39,7 @@ public class shooterSubsytem extends SubsystemBase {
 
 
     tShooterPID = tShooter.getPIDController();
-    kP = 0.0004;
+    kP = 0.0004;//TODO: TUNE PID
     kI = 0;
     kD = 0;
     kIz = 0;
