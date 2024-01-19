@@ -91,32 +91,29 @@ public class RobotContainer {
                                   OperatorConstants.RIGHT_X_DEADBAND),
                                 () -> driverXbox.getRightBumper());
 
-    AbsoluteDrive absDrive = new AbsoluteDrive(drivebase,  
-                                () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-                                    OperatorConstants.LEFT_Y_DEADBAND),
-                                () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-                                    OperatorConstants.LEFT_X_DEADBAND),
-                                () -> MathUtil.applyDeadband(driverXbox.getRightX(),
-                                   OperatorConstants.RIGHT_X_DEADBAND),  
-                                () -> MathUtil.applyDeadband(driverXbox.getRightY(),
-                                    OperatorConstants.RIGHT_Y_DEADBAND));
-
-AbsoluteFieldDrive teleopField = new AbsoluteFieldDrive(drivebase,   
-                                () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-                                  OperatorConstants.LEFT_Y_DEADBAND),
-                                () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-                                  OperatorConstants.LEFT_X_DEADBAND),
-                                () -> MathUtil.applyDeadband(driverXbox.getRightX(),
-                                  OperatorConstants.RIGHT_X_DEADBAND) );
-
-  //LIMELIGHT DRIVE
+  AbsoluteDrive absDrive = new AbsoluteDrive(drivebase,  
+                                () -> -MathUtil.applyDeadband(driverXbox.getRawAxis(1), 0.02),
+                                () -> -MathUtil.applyDeadband(driverXbox.getRawAxis(0),0.02),
+                                () -> -MathUtil.applyDeadband(driverXbox.getRawAxis(4), 0.02),  
+                                () -> -MathUtil.applyDeadband(driverXbox.getRawAxis(5), 0.02));
+                            
+                            
+  AbsoluteFieldDrive teleopField = new AbsoluteFieldDrive(drivebase,   
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(0),
+                                OperatorConstants.LEFT_Y_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(1),
+                                OperatorConstants.LEFT_X_DEADBAND),
+                                () -> MathUtil.applyDeadband(driverXbox.getRawAxis(4),
+                                OperatorConstants.RIGHT_X_DEADBAND) );
+                            
+                              //LIMELIGHT DRIVE
   aprilTagSwerve limelightSwerve = new aprilTagSwerve(drivebase, 
                                 () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
-                                  OperatorConstants.LEFT_Y_DEADBAND),
+                                OperatorConstants.LEFT_Y_DEADBAND),
                                 () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-                                  OperatorConstants.LEFT_X_DEADBAND),
+                                OperatorConstants.LEFT_X_DEADBAND),
                                 () -> MathUtil.applyDeadband(driverXbox.getRightX(),
-                                  OperatorConstants.RIGHT_X_DEADBAND),
+                                OperatorConstants.RIGHT_X_DEADBAND),
                                 () -> driverXbox.getRightBumper());
 
 
