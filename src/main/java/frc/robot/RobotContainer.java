@@ -159,6 +159,8 @@ private final SendableChooser<Command> autoChooser;
                                   () -> MathUtil.applyDeadband(driverXbox.getRightX(),
                                    OperatorConstants.RIGHT_X_DEADBAND),
                                   () -> driverXbox.getRightBumper()));
+
+                                  
     m_driverController.a().onTrue(new zeroGyroCommand(drivebase));
     
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
@@ -175,7 +177,6 @@ private final SendableChooser<Command> autoChooser;
 
 //NOT SURE IF THIS CODE BELOW WILL WORK NEEDS TESTING
   public Command getAutonomousCommandrev1() {
-    Trajectory PPtraj= loadPPtraj("generatedJSON");
 
 
     // 1. Create trajectory settings
@@ -187,13 +188,7 @@ private final SendableChooser<Command> autoChooser;
     
 
     // 2. Generate trajectory
-    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-            new Pose2d(0, 0, new Rotation2d(0)),
-            List.of(
-                    new Translation2d(1, 0),
-                    new Translation2d(1, -1)),
-            new Pose2d(2, -1, Rotation2d.fromDegrees(180)),
-            trajectoryConfig);
+    Trajectory PPtraj= loadPPtraj("generatedJSON");
 
     // 3. Define PID controllers for tracking trajectory
     PIDController xController = new PIDController(Auton.kPXController, 0, 0);
@@ -215,7 +210,7 @@ private final SendableChooser<Command> autoChooser;
 
     // 5. Add some init and wrap-up, and return everything
     return new SequentialCommandGroup(
-            new InstantCommand(() -> drivebase.resetOdometry(trajectory.getInitialPose())),
+            new InstantCommand(() -> drivebase.resetOdometry(PPtraj.getInitialPose())),
             swerveControllerCommand,
             new InstantCommand(() -> drivebase.stopModules()));
 }
